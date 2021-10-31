@@ -32,7 +32,7 @@ class: center, middle, inverse, title-slide
 - Let's start with the basics: A Coordinate System is a set of mathematical rules for specifying how coordinates are to be assigned to points
 
 
-- CRS "defines &lt;b&gt;how the spatial elements of data relate to the surface of the Earth&lt;/b&gt;".pull-left[.footnote[[*]Muenchow, Robin Lovelace, Jakub Nowosad, Jannes. Chapter 2 Geographic Data in R | Geocomputation with R. geocompr.robinlovelace.net, https://geocompr.robinlovelace.net/spatial-class.html]] (by a datum)
+- CRS "defines &lt;b&gt;how the spatial elements of data relate to the surface of the Earth&lt;/b&gt;".pull-left[.footnote[[*]Muenchow, Robin Lovelace, Jakub Nowosad, Jannes. Chapter 2 Geographic Data in R | Geocomputation with R. geocompr.robinlovelace.net, https://geocompr.robinlovelace.net/spatial-class.html]]
 ---
 
 # Simplify the world
@@ -70,11 +70,12 @@ projecting is always distorted (impossible to have a perfect representation of a
 
 # So, how can we work with CRS in R?
 
-Spatial R packages support various CRSs
+Spatial R packages support various ways of storing CRSs
 
 - describe CRSs in R with
+  - PROJ.4 strings (example:"+proj=longlat +datum=WGS84 +no_defs"; not that common anymore)
   - Spatial Reference System Identifier (SRID), short and easy to remember (most popular: EPSG:4326 represents the latitude/longitude WGS84 CRS, and ESRI:54030 Robinson projection)
-  - or with well-known text (WKT216) definitions (more detailed, and precise)
+  - or with well-known text (WKT2) definitions (more detailed, and precise)
   
 ---
 
@@ -95,12 +96,12 @@ Spatial R packages support various CRSs
 ---
 
 # sf in practice
-- sf objects are stored in dataframes, the geographical data can be found in the ‘geom’ coloumn (contains coordinates of the country polygons)
+- sf objects are stored in dataframes, the geographic data can be found in the ‘geom’ column 
 - all geometries in a geometry list-column must have the same CRS
 
 ---
 
-# Look at this example from the world dataset in sf:
+# Lookin at an example:
 
 ```r
 head(world)
@@ -209,7 +210,7 @@ st_crs(world)$proj4string # get the proj4string
 ---
 # sf and its useful functions
 Remember, all geometries in a geometry list-column must have the same CRS! We can transform it easily with sf!
-The input can be either a SRID ("EPSG:4269" in the example), complete WKT2 representation (proj4string) or CRS (WGS 84)
+The input can be either a SRID ("EPSG:4269" in the example), complete WKT2 representations, proj4strings, or CRS (WGS 84)
 
 
 ```r
