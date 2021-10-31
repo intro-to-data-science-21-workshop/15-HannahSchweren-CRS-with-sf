@@ -34,4 +34,5 @@ The material in this repository is made available under the [MIT license](http:/
 ## Statement of contributions
 
 **Marco Schildt**  prepared the practice material and post-processed the recording.
+
 **Hannah Schweren** prepared the presentation slides and recording.
