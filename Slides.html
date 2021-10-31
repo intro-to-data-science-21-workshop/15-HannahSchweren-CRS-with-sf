@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>CRS with sf</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Marco Schildt and Hannah Schweren" />
+    <script src="Slides_files/header-attrs-2.11/header-attrs.js"></script>
+    <link href="Slides_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="Slides_files/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="Slides_files/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# CRS with sf
+## Workshop - Intro to Data Science 2021
+### Marco Schildt and Hannah Schweren
+### Hertie School
+### November 4th 2021
+
+---
+
+
+
+
+
+
+
+# What is a Coordinate Reference System? (CRS)
+
+- Let's start with the basics: A Coordinate System is a set of mathematical rules for specifying how coordinates are to be assigned to points
+
+
+- CRS "defines &lt;b&gt;how the spatial elements of data relate to the surface of the Earth&lt;/b&gt;".pull-left[.footnote[[*]Muenchow, Robin Lovelace, Jakub Nowosad, Jannes. Chapter 2 Geographic Data in R | Geocomputation with R. geocompr.robinlovelace.net, https://geocompr.robinlovelace.net/spatial-class.html]] (by a datum)
+---
+
+# Simplify the world
+
+.center[![](Ellipsoid.png)
+.center[Source: https://www.icsm.gov.au/sites/default/files/inline-images/spheroid_height_0.jpg]]
+---
+# One component of the CRS: the Datum
+
+Contains information on what ellipsoid to use and the precise relationship between the Cartesian coordinates and the location on the Earth’s surface
+
+- &lt;b&gt;geocentric datum&lt;/b&gt;, not optimized for a specific location (WGS84)
+- &lt;b&gt;local datum&lt;/b&gt;, matches perfectly the surface at a particular location (NAD83)
+
+.center[![](local.geodetic.datum.png)
+.center[Source: https://www.icsm.gov.au/sites/default/files/inline-images/spheroid_height_0.jpg]]
+---
+
+# Definition: Projection
+
+CRSs are either geographic or projected
+
+- &lt;b&gt;Geographic CRS&lt;/b&gt;, e.g. Ellipsoidal models are defined by two values: the equatorial radius and the polar radius (longitude and latitude) 
+- All &lt;b&gt;projected CRSs&lt;/b&gt; are based on a geographic CRS; transform 3D to 2D with Easting and Northing values
+
+projecting is always distorted (impossible to have a perfect representation of area, direction, distance, and shape at the same time)
+  
+---
+
+# projections
+
+.center[![](projections.png)
+.center[Source:https://www.joaoleitao.com/wp-content/uploads/2019/04/world-map-projections-1024x903.jpg]]
+---
+
+# So, how can we work with CRS in R?
+
+Spatial R packages support various CRSs
+
+- describe CRSs in R with
+  - Spatial Reference System Identifier (SRID), short and easy to remember (most popular: EPSG:4326 represents the latitude/longitude WGS84 CRS, and ESRI:54030 Robinson projection)
+  - or with well-known text (WKT216) definitions (more detailed, and precise)
+  
+---
+
+# What is Simple Features for R? (sf)
+
+- sf is a package providing a class system for geographic vector data
+- combines functionality of several previous packages (sp, rgdal and rgeos)
+- basic building blocks of sf: different geometry types
+- find more useful information about sf in its vignette (vignette("sf1")
+
+---
+
+# Most common geometry types
+
+.center[![](sf-classes.png)
+.center[Source:https://bookdown.org/robinlovelace/geocompr/figures/sf-classes.png]]
+
+---
+
+# sf in practice
+- sf objects are stored in dataframes, the geographical data can be found in the ‘geom’ coloumn (contains coordinates of the country polygons)
+- all geometries in a geometry list-column must have the same CRS
+
+---
+
+# Look at this example from the world dataset in sf:
+
+```r
+head(world)
+```
+
+```
+## Simple feature collection with 6 features and 1 field
+## Geometry type: MULTIPOLYGON
+## Dimension:     XY
+## Bounding box:  xmin: -180 ymin: -18.28799 xmax: 180 ymax: 83.23324
+## Geodetic CRS:  WGS 84
+## # A tibble: 6 x 2
+##   iso_a2                                                                    geom
+##   &lt;chr&gt;                                                       &lt;MULTIPOLYGON [°]&gt;
+## 1 FJ     (((-180 -16.55522, -179.9174 -16.50178, -179.7933 -16.02088, -180 -16.…
+## 2 TZ     (((33.90371 -0.95, 31.86617 -1.02736, 30.76986 -1.01455, 30.4191 -1.13…
+## 3 EH     (((-8.66559 27.65643, -8.817828 27.65643, -8.794884 27.1207, -9.413037…
+## 4 CA     (((-132.71 54.04001, -133.18 54.16998, -133.2397 53.85108, -133.0546 5…
+## 5 US     (((-171.7317 63.78252, -171.7911 63.40585, -171.5531 63.31779, -170.67…
+## 6 KZ     (((87.35997 49.21498, 86.82936 49.82667, 85.54127 49.69286, 85.11556 5…
+```
+---
+
+# simple plot of spatial data
+
+```r
+plot(st_geometry(world), col = sf.colors(12, categorical = TRUE), border = 'grey', 
+     axes = TRUE)
+```
+
+![](Slides_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+
+---
+# sf and its useful functions
+
+
+```r
+st_crs(world) # get CRS
+```
+
+```
+## Coordinate Reference System:
+##   User input: EPSG:4326 
+##   wkt:
+## GEOGCRS["WGS 84",
+##     DATUM["World Geodetic System 1984",
+##         ELLIPSOID["WGS 84",6378137,298.257223563,
+##             LENGTHUNIT["metre",1]]],
+##     PRIMEM["Greenwich",0,
+##         ANGLEUNIT["degree",0.0174532925199433]],
+##     CS[ellipsoidal,2],
+##         AXIS["geodetic latitude (Lat)",north,
+##             ORDER[1],
+##             ANGLEUNIT["degree",0.0174532925199433]],
+##         AXIS["geodetic longitude (Lon)",east,
+##             ORDER[2],
+##             ANGLEUNIT["degree",0.0174532925199433]],
+##     USAGE[
+##         SCOPE["Horizontal component of 3D system."],
+##         AREA["World."],
+##         BBOX[-90,-180,90,180]],
+##     ID["EPSG",4326]]
+```
+
+---
+# sf and its useful functions
+
+```r
+st_crs(world)$IsGeographic # check if its geographic or projected
+```
+
+```
+## [1] TRUE
+```
+---
+# sf and its useful functions
+
+
+```r
+st_crs(world)$units_gdal #find out the CRS units
+```
+
+```
+## [1] "degree"
+```
+---
+# sf and its useful functions
+
+```r
+st_crs(world)$srid # get the SRID
+```
+
+```
+## [1] "EPSG:4326"
+```
+---
+# sf and its useful functions
+
+```r
+st_crs(world)$proj4string # get the proj4string
+```
+
+```
+## [1] "+proj=longlat +datum=WGS84 +no_defs"
+```
+---
+# sf and its useful functions
+Remember, all geometries in a geometry list-column must have the same CRS! We can transform it easily with sf!
+The input can be either a SRID ("EPSG:4269" in the example), complete WKT2 representation (proj4string) or CRS (WGS 84)
+
+
+```r
+world2 = data.frame(world) %&gt;% 
+   st_as_sf(crs = 4269)
+```
+
+```
+## Warning: st_crs&lt;- : replacing crs does not reproject data; use st_transform for
+## that
+```
+
+```r
+st_crs(world2)
+```
+
+```
+## Coordinate Reference System:
+##   User input: EPSG:4269 
+##   wkt:
+## GEOGCRS["NAD83",
+##     DATUM["North American Datum 1983",
+##         ELLIPSOID["GRS 1980",6378137,298.257222101,
+##             LENGTHUNIT["metre",1]]],
+##     PRIMEM["Greenwich",0,
+##         ANGLEUNIT["degree",0.0174532925199433]],
+##     CS[ellipsoidal,2],
+##         AXIS["geodetic latitude (Lat)",north,
+##             ORDER[1],
+##             ANGLEUNIT["degree",0.0174532925199433]],
+##         AXIS["geodetic longitude (Lon)",east,
+##             ORDER[2],
+##             ANGLEUNIT["degree",0.0174532925199433]],
+##     USAGE[
+##         SCOPE["Geodesy."],
+##         AREA["North America - onshore and offshore: Canada - Alberta; British Columbia; Manitoba; New Brunswick; Newfoundland and Labrador; Northwest Territories; Nova Scotia; Nunavut; Ontario; Prince Edward Island; Quebec; Saskatchewan; Yukon. Puerto Rico. United States (USA) - Alabama; Alaska; Arizona; Arkansas; California; Colorado; Connecticut; Delaware; Florida; Georgia; Hawaii; Idaho; Illinois; Indiana; Iowa; Kansas; Kentucky; Louisiana; Maine; Maryland; Massachusetts; Michigan; Minnesota; Mississippi; Missouri; Montana; Nebraska; Nevada; New Hampshire; New Jersey; New Mexico; New York; North Carolina; North Dakota; Ohio; Oklahoma; Oregon; Pennsylvania; Rhode Island; South Carolina; South Dakota; Tennessee; Texas; Utah; Vermont; Virginia; Washington; West Virginia; Wisconsin; Wyoming. US Virgin Islands.  British Virgin Islands."],
+##         BBOX[14.92,167.65,86.46,-47.74]],
+##     ID["EPSG",4269]]
+```
+
+---
+# Sources
+
+Content and code of this workshop draw heavily on the following two, very interesting ebooks: 
+- Muenchow, Robin Lovelace, Jakub Nowosad, Jannes. Geocomputation with R. bookdown.org, https://geocompr.robinlovelace.net/
+- Bivand, Edzer Pebesma, Roger. | Spatial Data Science. keen-swartz-3146c4.netlify.app, https://keen-swartz-3146c4.netlify.app/intro.html. 
+
+Other sources we used for the presentation:
+
+- Bivand, Edzer Pebesma, Roger. Spatial Data Science. keen-swartz-3146c4.netlify.app, https://keen-swartz-3146c4.netlify.app/
+- Overview of Coordinate Reference Systems (CRS) in R: https://www.nceas.ucsb.edu/sites/default/files/2020-04/OverviewCoordinateReferenceSystems.pdf
+
+---
+#AND NOW...
+
+
+&lt;b&gt;Enjoy the life part of our workshop guided by Marco!
+
+
+Thanks for your attention so far, we are happy to answer your questions!&lt;/b&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightLines": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
