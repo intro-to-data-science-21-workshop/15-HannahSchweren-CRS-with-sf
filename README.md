@@ -7,28 +7,28 @@ This repository provides materials for a session that is part of the [I2DS Tools
 
 ### Session contents
 
-This session will introduce you to ...
+This session will introduce you to Coordinate Reference Systems (CRS) in R with the sf package. We first want to give you an overview of the concepts you need to understand in order to potentially use this tool for your future work. In the life session we want to show you some coding examples in practice!
 
 ### Main learning objectives
 
-The goals of this session are to (1) equip you with conceptual knowledge about the dplyr package and data wrangling workflow, (2) show you the three key verbs of the pacakge, and (3) provide you with practice material as well as some further readings.
+The goals of this session are to (1) provide explanations about the concepts behind CRS like datums and projections, (2) give you an overview of easy applications of the sf package in practice, and (3) provide you with useful practice material as well as some further readings that will help you to deepen your understanding of the topic after this rather short introduction.
 
 
 ## Instructors
 
--  ([website](http://simonmunzert.github.io/), [twitter](https://twitter.com/simonsaysnothin))
-- Kermit the Frog ([website](https://en.wikipedia.org/wiki/Kermit_the_Frog), [twitter](https://twitter.com/KermitTheFrog))
-
+-  Marco Schildt([website](https://github.com/search?q=user%3Am-schildt+&type=repositories), 
+-  Hannah Schweren([website](https://github.com/hannahmagda)
 
 ## Further resources
 
-- [dplyr overview at dplyr.tidyverse.org](https://dplyr.tidyverse.org/)
-- [Hands-on dplyr tutorial by Data School on YouTube](https://www.youtube.com/watch?v=jWjqLW-u3hc)
-- [R for Data Science book - part on data wrangling](https://r4ds.had.co.nz/wrangle-intro.html)
+- [E-Book with a good Introduction on CRS and SF](https://geocompr.robinlovelace.net/spatial-class.html#crs-intro)
+- [E-Book with a good Introduction on CRS and SF](https://keen-swartz-3146c4.netlify.app)
+- [Overview SF](https://r-spatial.github.io/sf/index.html)
+- [Cheatsheet SF](https://github.com/rstudio/cheatsheets/blob/main/sf.pdf)
+- [Well-structured Overview of CRS in R](https://www.nceas.ucsb.edu/sites/default/files/2020-04/OverviewCoordinateReferenceSystems.pdf)
 
 
 ## License
-
 The material in this repository is made available under the [MIT license](http://opensource.org/licenses/mit-license.php). 
 
 ## Statement of contributions
