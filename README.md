@@ -22,10 +22,14 @@ The goals of this session are to (1) provide explanations about the concepts beh
 ## Further resources
 
 - [E-Book with a good Introduction on CRS and SF](https://geocompr.robinlovelace.net/spatial-class.html#crs-intro)
-- [E-Book with a good Introduction on CRS and SF](https://keen-swartz-3146c4.netlify.app)
+- [Chapter on CRS](https://keen-swartz-3146c4.netlify.app/intro.html#coordinate-reference-systems)
 - [Overview SF](https://r-spatial.github.io/sf/index.html)
+- [The sf package](https://www.geo.fu-berlin.de/en/v/soga/Introduction-to-R/Spatial-Data/sf/index.html)
 - [Cheatsheet SF](https://github.com/rstudio/cheatsheets/blob/main/sf.pdf)
 - [Well-structured Overview of CRS in R](https://www.nceas.ucsb.edu/sites/default/files/2020-04/OverviewCoordinateReferenceSystems.pdf)
+- [Coordinate Reference System and Spatial Projection](https://www.earthdatascience.org/courses/earth-analytics/spatial-data-r/intro-to-coordinate-reference-systems/)
+- [Zooming in on maps with sf and ggplot2](https://datascience.blog.wzb.eu/2019/04/30/zooming-in-on-maps-with-sf-and-ggplot2/)
+
 
 
 ## License
