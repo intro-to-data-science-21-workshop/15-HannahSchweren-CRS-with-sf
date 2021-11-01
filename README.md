@@ -16,8 +16,8 @@ The goals of this session are to (1) provide explanations about the concepts beh
 
 ## Instructors
 
--  Marco Schildt([website](https://github.com/search?q=user%3Am-schildt+&type=repositories), 
--  Hannah Schweren([website](https://github.com/hannahmagda)
+-  Marco Schildt([website](https://github.com/search?q=user%3Am-schildt+&type=repositories)) 
+-  Hannah Schweren([website](https://github.com/hannahmagda))
 
 ## Further resources
 
